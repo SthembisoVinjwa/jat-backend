@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    image: 'docker-spring-boot-postgres:latest'
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/jobapptrackerdb
+      - SPRING_DATASOURCE_USERNAME=jobapptracker
+      - SPRING_DATASOURCE_PASSWORD=test123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      POSTGRES_USER: jobapptracker
+      POSTGRES_PASSWORD: test123
+      POSTGRES_DB: jobapptrackerdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./jobapptracker_db.sql:/docker-entrypoint-initdb.d/jobapptracker_db.sql
